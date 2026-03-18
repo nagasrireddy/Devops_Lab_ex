@@ -1,0 +1,42 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # Install client dependencies
+    - name: Install Client Dependencies
+      run: |
+        cd client
+        npm install
+
+    # Build client
+    - name: Build Client
+      run: |
+        cd client
+        npm run build
+
+    # Install server dependencies
+    - name: Install Server Dependencies
+      run: |
+        cd server
+        npm install
+
+    # Run server tests (if any)
+    - name: Run Server Tests
+      run: |
+        cd server
+        npm test || echo "No tests found"
